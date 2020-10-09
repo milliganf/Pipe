@@ -1,6 +1,8 @@
 fs = require('fs')
 const prompt = require('prompt-sync')();
 var plain = fs.readFileSync(process.argv[2], "utf-8")
+//for repl use:
+plain = fs.readFileSync("exponent", "utf-8")
 const commands = {"say": function(x, index){
     if(x.length > 1){
       console.log("Too many arguments: say "+x);
