@@ -1,3 +1,1 @@
-read " Number of times to run: " | x ;
-read " Number to start with (Do not make lower than 2): " | y ;
-loop x 0 y / 2 | say [ 0 ] + [ 0 ]
+define " test " 1 | say " test " | test

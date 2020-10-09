@@ -2,8 +2,8 @@ fs = require('fs')
 const prompt = require('prompt-sync')();
 var plain = fs.readFileSync(process.argv[2], "utf-8")
 //for repl use:
-plain = fs.readFileSync("exponent", "utf-8")
-const commands = {"say": function(x, index){
+plain = fs.readFileSync("program", "utf-8")
+var commands = {"say": function(x, index){
     if(x.length > 1){
       console.log("Too many arguments: say "+x);
       return x[0];
@@ -66,7 +66,58 @@ const commands = {"say": function(x, index){
       return false;
     }
     return prompt(all[0]+"")
-  }
+  }, "define": function(all, startIndex){
+      if(all.length > 2){
+      console.error("Too many arguments: define "+all);
+      return false;
+    } else if (all.length < 2){
+      console.error("Not enough arguments: define "+all);
+      return false;
+    } else{
+      var pipeNum = all[1]
+      var name = all[0];
+      var torun = []
+      var index = startIndex;
+      while (true){
+        index += 1;
+        if(lex[on][index][0] === "pipe"){
+          index += 1;
+          break;
+        }
+      }
+      while (true){
+        torun.push(lex[on][index])
+        if(lex[on][index][1] === "|"){
+          pipeNum -= 1;
+        }
+        if(pipeNum === 0 && all[1] !== 0){
+          break;
+        } else if (index === lex[on].length-1 && all[1] === 0){
+          torun.push(["pipe", "|"]);
+          break;
+        }
+        index += 1;
+      }
+      commands[name] = function(all, index){
+        parser(torun);
+      };
+      for(var i = on; i<lex.length; i++){
+        for(var x = 0; x < lex[i].length; x++){
+          if(i === on && x < index){
+            continue;
+          } else {
+            if(lex[i][x][1] === name){
+              console.log(lex[i][x])
+              lex[i][x][0] = "com";
+            }
+          }
+        }
+      }
+      console.log(commands)
+      i = index;
+      return name;
+    }
+    }
 }
 const operators = "+-*/".split('')
 const numbers = '1234567890'.split('')
@@ -156,6 +207,7 @@ function parser(lexed){
             total += lexed[o][1] + " ";
             o += 1;
           }
+          total = total.slice(0, total.length-1)
           if(command){
             finalArgs.push(total);
           } else {
