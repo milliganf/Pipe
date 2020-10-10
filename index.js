@@ -3,7 +3,7 @@ const prompt = require('prompt-sync')();
 var plain = fs.readFileSync(process.argv[2], "utf-8")
 //for repl use:
 plain = fs.readFileSync("program", "utf-8")
-var commands = {"say": function(x, index){
+var commands = {"say": function(x, index, lex){
     if(x.length > 1){
       console.log("Too many arguments: say "+x);
       return x[0];
@@ -14,7 +14,7 @@ var commands = {"say": function(x, index){
       return x[0];
     }
   }, 
-  "loop": function(all, startIndex){
+  "loop": function(all, startIndex, lex){
     var num = all[0];
     var pipeNum = all[1]
     if(all.length > 3){
@@ -29,19 +29,19 @@ var commands = {"say": function(x, index){
       var index = startIndex;
       while (true){
         index += 1;
-        if(lex[on][index][0] === "pipe"){
+        if(lex[index][0] === "pipe"){
           index += 1;
           break;
         }
       }
       while (true){
-        torun.push(lex[on][index])
-        if(lex[on][index][1] === "|"){
+        torun.push(lex[index])
+        if(lex[index][1] === "|"){
           pipeNum -= 1;
         }
         if(pipeNum === 0 && all[1] !== 0){
           break;
-        } else if (index === lex[on].length-1 && all[1] === 0){
+        } else if (index === lex.length-1 && all[1] === 0){
           torun.push(["pipe", "|"]);
           break;
         }
@@ -57,7 +57,7 @@ var commands = {"say": function(x, index){
       return num;
     }
   },
-  "read": function(all, index){
+  "read": function(all, index, lex){
     if(all.length > 1){
       console.error("Too many arguments: read "+all);
       return false;
@@ -66,7 +66,7 @@ var commands = {"say": function(x, index){
       return false;
     }
     return prompt(all[0]+"")
-  }, "define": function(all, startIndex){
+  }, "define": function(all, startIndex, lex){
       if(all.length > 2){
       console.error("Too many arguments: define "+all);
       return false;
@@ -80,43 +80,61 @@ var commands = {"say": function(x, index){
       var index = startIndex;
       while (true){
         index += 1;
-        if(lex[on][index][0] === "pipe"){
+        if(lex[index][0] === "pipe"){
           index += 1;
           break;
         }
       }
       while (true){
-        torun.push(lex[on][index])
-        if(lex[on][index][1] === "|"){
+        torun.push(lex[index])
+        if(lex[index][1] === "|"){
           pipeNum -= 1;
         }
         if(pipeNum === 0 && all[1] !== 0){
           break;
-        } else if (index === lex[on].length-1 && all[1] === 0){
+        } else if (index === lex.length-1 && all[1] === 0){
           torun.push(["pipe", "|"]);
           break;
         }
         index += 1;
       }
-      commands[name] = function(all, index){
-        parser(torun);
+      commands[name] = function(ev, ind){
+        var add = []
+        var finalev = []
+        for(var b = 0; b<ev.length; b++){
+          if(typeof(ev[b]) === "string"){
+            finalev.push(["symbol", "\""]);
+            finalev.push(["none", ev[b]]);
+            finalev.push(["symbol", "\""]);
+          } else {
+            finalev.push(["num", ev[b]])
+          }
+          finalev.push(["symbol", ","])
+        }
+        finalev.push(["pipe", "|"])
+        add = finalev;
+        if(add.length > 0){
+          parser(add.concat(torun));
+        } else{
+          parser(torun)
+        }
       };
-      for(var i = on; i<lex.length; i++){
-        for(var x = 0; x < lex[i].length; x++){
-          if(i === on && x < index){
+      for(var l = on; l<lexd.length; l++){
+        for(var x = 0; x < lexd[l].length; x++){
+          if(l === on && x < index){
             continue;
           } else {
-            if(lex[i][x][1] === name){
-              console.log(lex[i][x])
-              lex[i][x][0] = "com";
+            if(lexd[l][x][1] === name){
+              lexd[l][x][0] = "com";
             }
           }
         }
       }
-      console.log(commands)
       i = index;
       return name;
     }
+    }, "return" : function(all, index){
+      return all[0];
     }
 }
 const operators = "+-*/".split('')
@@ -190,7 +208,7 @@ function parser(lexed){
     switch(lexed[i][0]){
       case "pipe":
         if(command){
-          args = [commands[command[0]](finalArgs, command[1])]
+          args = [commands[command[0]](finalArgs, command[1], lexed)]
         }
         finalArgs = [];
         command = null;
@@ -335,7 +353,7 @@ function parser(lexed){
             }
           } else if(lexed[i][1] === ","){
             if(command){
-              args.push(commands[command[0]](finalArgs, command[1]))
+              args.push(commands[command[0]](finalArgs, command[1], lexed))
               finalArgs = [];
               command = null;
             }
@@ -371,15 +389,18 @@ function parser(lexed){
     }          
   }
   if(command){
-    commands[command[0]](finalArgs, command[1])
+    commands[command[0]](finalArgs, command[1], lexed)
   }
 }
 //console.log(plain)
 //console.log(lexer(plain))
-var lex = lexer(plain)
+var lexd = lexer(plain)
 var on = 0;
-for(line of lex){
+for(line of lexd){
   parser(line)
   on += 1;
+  if(on >= lexd.length){
+    break;
+  }
 }
 console.log("")

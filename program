@@ -1,1 +1,4 @@
-define " test " 1 | say " test " | test
+define " exponents " 0 | loop [ 0 ] - 1 2 number | answer * number | answer ;
+define " exponento " 0 | [ 0 ] | number | answer ;
+exponento 5 ; exponents 3 ;
+say answer
