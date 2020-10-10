@@ -1,3 +1,4 @@
-read " Number of times to run: " | x ;
-read " Number to start with (Do not make lower than 2): " | y ;
-loop x 0 y / 2 | say [ 0 ] + [ 0 ]
+define " exponents " 0 | loop [ 0 ] - 1 2 number | answer * number | answer ;
+define " exponento " 0 | [ 0 ] | number | answer ;
+exponento 5 ; exponents 3 ;
+say answer
