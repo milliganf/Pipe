@@ -1,1 +1,2 @@
-1 | say [ 0 ] + [ 0 ] \ | say [ 0 ] - [ 0 ] \ 2 | say [ 0 ] * 2 \ 3 | say [ 0 ]
+define " exponent " 0 | number | answer \ 2 | loop [ 1 ] - 1 2 number | answer * number | answer | say answer ;
+read " Number: " , read " Exponent: " , | exponent [ 0 ] [ 1 ]
