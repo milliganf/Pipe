@@ -99,7 +99,8 @@ var commands = {"say": function(x, index, lex){
         }
         index += 1;
       }
-      commands[name] = function(ev, ind){
+      commands[name] = function(ev, ind, lex){
+        ol = i;
         var add = []
         var finalev = []
         for(var b = 0; b<ev.length; b++){
@@ -119,6 +120,21 @@ var commands = {"say": function(x, index, lex){
         } else{
           parser(torun)
         }
+        //console.log(torun[21])
+        if(torun.find(el => el[1] === "return")){
+          var d = torun.findIndex(el => el[1] === "return")+1;
+          //console.log(index)
+          var all = [["com", "return"]]
+          while (torun[d][1] !== "|"){
+            all.push(torun[d]);
+            d += 1;
+          }
+          //console.log(i)
+          var res = parser(all)
+          i = ol;
+          return res
+        }
+        return undefined
       };
       for(var l = on; l<lexd.length; l++){
         for(var x = 0; x < lexd[l].length; x++){
@@ -446,7 +462,7 @@ function parser(lexed){
     }          
   }
   if(command){
-    commands[command[0]](finalArgs, command[1], lexed)
+    return commands[command[0]](finalArgs, command[1], lexed)
   }
 }
 //console.log(plain)
