@@ -1,2 +1,2 @@
-define " exponent " 0 | number | answer \ 2 | loop [ 1 ] - 1 2 number | answer * number | answer | return answer ;
-read " Number: " , read " Exponent: " , | exponent [ 0 ] [ 1 ] | say [ 0 ]
+define " fibbonacci " 0 | amount | 0 | new | 1 | old | loop amount 0 1 | say new | old + new | new | new - old | old ;
+read " Amount: " | fibbonacci [ 0 ]
