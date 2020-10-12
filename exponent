@@ -1,5 +1,2 @@
-read " Number: " | number ;
-number | answer ;
-read " Exponent: " | exponent ;
-loop exponent - 1 0 number | answer * number | answer ;
-say answer ;
+define " exponent " 0 | number | answer \ 2 | loop [ 1 ] - 1 2 number | answer * number | answer | say answer ;
+read " Number: " , read " Exponent: " , | exponent [ 0 ] [ 1 ]
