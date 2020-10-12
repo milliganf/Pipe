@@ -293,7 +293,9 @@ function parser(lexed){
         break;
       case "num":
         if(!command){
+          //console.log(args)
           args[args.length - 1].push(parseInt(lexed[i][1]))
+          operation = true;
         } else if(!(lexed[i-1][0] === "opr")){
           finalArgs.push(parseInt(lexed[i][1]));
         }
@@ -446,7 +448,10 @@ function parser(lexed){
             }
           } else {
             if(pipe){
+              //console.log(args)
               variables[lexed[i][1]] = args[arg][0];
+              args[args.length-1].push(args[arg][0]);
+              operation = true;
             } else {
               console.log(`Variable ${lexed[i][1]} does not exist.`);
               return false;
