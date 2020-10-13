@@ -30,4 +30,4 @@ This kind of thing is the foundation of Pipe.
  - Pretty much everything has to be seperated by spaces or it won't work.
  - Put semicolons at the end of lines, but you don't have to for the last line.
  
- ## That's it, that's all the help your getting. Good luck!
+ ## That's it, that's all the help you're getting. Good luck!
