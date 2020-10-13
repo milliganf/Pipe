@@ -22,12 +22,12 @@ This kind of thing is the foundation of Pipe.
  - return - Takes one argument, returns it. If it is in a function, the function will return it.
  
  ## Variables
- To define or set a variable, the syntax is: value | variable_name
- Use a variable just as you would use a number or string.
+ - To define or set a variable, the syntax is: value | variable_name
+ - Use a variable just as you would use a number or string.
  
  ## A few more things
- To pipe multiple things into the same function the syntax is thus: x , y , z , | say [ 0 ] + [ 1 ] + [ 2 ] ;
- Pretty much everything has to be seperated by spaces or it won't work.
- Put semicolons at the end of lines, but you don't have to for the last line.
+ - To pipe multiple things into the same function the syntax is thus: x , y , z , | say [ 0 ] + [ 1 ] + [ 2 ] ;
+ - Pretty much everything has to be seperated by spaces or it won't work.
+ - Put semicolons at the end of lines, but you don't have to for the last line.
  
  ## That's it, that's all the help your getting. Good luck!
