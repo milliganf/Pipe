@@ -1,2 +1,3 @@
 define " exponent " 0 | number | answer \ 2 | loop [ 1 ] - 1 2 number | answer * number | answer | return answer ;
 read " Number: " , read " Exponent: " , | exponent [ 0 ] [ 1 ] | say [ 0 ]
+read " Amount: " | loop [ 0 ] 0 2 | say [ 0 ] | exponent [ 0 ] 2
