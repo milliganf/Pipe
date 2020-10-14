@@ -24,7 +24,15 @@ This kind of thing is the foundation of Pipe.
  ## Variables
  - To define or set a variable, the syntax is: value | variable_name
  - Use a variable just as you would use a number or string.
- 
+ ## Backpiping
+ Backpiping is using the backslash before a pipe in order to pipe in a past value. For example, say you wanted to take a number, say it doubled, then say it... singled, without using dividing. You could use backpiping like so:  
+ 10 | say [ 0 ] + [ 0 ] \ | say [ 0 ] ;  
+ The backslash before the second pipe means that, rather than the output of the first say being piped into the second say, the 10 is piped into the second say. You can say how many pipes back you want to go with a number after the backslash. Here is another example:  
+ 10 | say [ 0 ] + [ 0 ] \ | say [ 0 ] * [ 0 ] \ 2 | say [ 0 ] ;  
+ Output:  
+ 20  
+ 100  
+ 10  
  ## A few more things
  - To pipe multiple things into the same function the syntax is thus: x , y , z , | say [ 0 ] + [ 1 ] + [ 2 ] ;
  - Pretty much everything has to be seperated by spaces or it won't work.
