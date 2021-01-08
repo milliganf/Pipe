@@ -152,9 +152,24 @@ var commands = {"say": function(x, index, lex){
     }
     }, "return" : function(all, index){
       return all[0];
+    }, "+": function(all, index, lex){
+        if(all.length > 2){return "Too many arguments: + "+all;}
+        if(all.length < 2){return "Too few arguments: + "+all;}
+        return parseInt(all[0]) + parseInt(all[1]);
+    }, "-": function(all, index, lex){
+        if(all.length > 2){return "Too many arguments: - "+all;}
+        if(all.length < 2){return "Too few arguments: - "+all;}
+        return parseInt(all[0]) - parseInt(all[1]);
+    }, "*": function(all, index, lex){
+        if(all.length > 2){return "Too many arguments: * "+all;}
+        if(all.length < 2){return "Too few arguments: * "+all;}
+        return parseInt(all[0]) * parseInt(all[1]);
+    }, "/": function(all, index, lex){
+        if(all.length > 2){return "Too many arguments: / "+all;}
+        if(all.length < 2){return "Too few arguments: / "+all;}
+        return parseInt(all[0]) / parseInt(all[1]);
     }
 }
-const operators = "+-*/".split('')
 const numbers = '1234567890'.split('')
 function identify(str){
     if(str === "|"){
@@ -165,9 +180,6 @@ function identify(str){
     }
     if(Object.keys(commands).includes(str)){
       return "com"
-    }
-    if(operators.includes(str)){
-      return "opr"
     }
     if(str === "\\"){
       return "back"
@@ -300,120 +312,6 @@ function parser(lexed){
           finalArgs.push(parseInt(lexed[i][1]));
         }
         break;
-      case "opr":
-        if(!command){
-          operation = true;
-        }
-        switch(lexed[i][1]){
-          case "+":
-            if(lexed[i+1][1] == "["){
-              finalArgs[finalArgs.length-1] += args[arg][lexed[i+2][1]]
-              if(!command){
-                //console.log("plus")
-                args[args.length-1][args[args.length-1].length-1] += args[arg][lexed[i+2][1]];
-              }
-              //console.log("plus")
-              i += 3
-            } else if (lexed[i+1][0] == "num"){
-              finalArgs[finalArgs.length-1] = parseInt(finalArgs[finalArgs.length-1]) + parseInt(lexed[i+1][1]);
-              if(!command){
-                args[args.length-1][args[args.length-1].length-1] += variables[lexed[i+1][1]];
-              }
-              i += 1;
-            } else if (Object.keys(variables).includes(lexed[i+1][1])){
-              finalArgs[finalArgs.length-1] += variables[lexed[i+1][1]];
-              if(!command){
-                args[args.length-1][args[args.length-1].length-1] += variables[lexed[i+1][1]];
-              }
-              i += 2;
-              if(i >= lexed.length-1){
-                break total_loop;
-              }
-              continue;
-            }
-            break;
-          case "-":
-              if(lexed[i+1][1] == "["){
-              finalArgs[finalArgs.length-1] -= args[arg][lexed[i+2][1]]
-              if(!command){
-                //console.log("plus")
-                args[args.length-1][args[args.length-1].length-1] -= args[arg][lexed[i+2][1]];
-              }
-              //console.log("plus")
-              i += 3
-            } else if (lexed[i+1][0] == "num"){
-              finalArgs[finalArgs.length-1] = parseInt(finalArgs[finalArgs.length-1]) - parseInt(lexed[i+1][1]);
-              if(!command){
-                args[args.length-1][args[args.length-1].length-1] -= variables[lexed[i+1][1]];
-              }
-              i += 1;
-            } else if (Object.keys(variables).includes(lexed[i+1][1])){
-              finalArgs[finalArgs.length-1] -= parseInt(variables[lexed[i+1][1]]);
-              if(!command){
-                args[args.length-1][args[args.length-1].length-1] -= variables[lexed[i+1][1]];
-              }
-              i += 2;
-              if(i >= lexed.length-1){
-                break total_loop;
-              }
-              continue;
-            }
-            break;
-          case "*":
-            if(lexed[i+1][1] == "["){
-              finalArgs[finalArgs.length-1] *= args[arg][lexed[i+2][1]]
-              if(!command){
-                //console.log("plus")
-                args[args.length-1][args[args.length-1].length-1] *= args[arg][lexed[i+2][1]];
-              }
-              //console.log("plus")
-              i += 3
-            } else if (lexed[i+1][0] == "num"){
-              finalArgs[finalArgs.length-1] = parseInt(finalArgs[finalArgs.length-1]) * parseInt(lexed[i+1][1]);
-              if(!command){
-                args[args.length-1][args[args.length-1].length-1] *= variables[lexed[i+1][1]];
-              }
-              i += 1;
-            } else if (Object.keys(variables).includes(lexed[i+1][1])){
-              finalArgs[finalArgs.length-1] *= parseInt(variables[lexed[i+1][1]]);
-              if(!command){
-                args[args.length-1][args[args.length-1].length-1] *= variables[lexed[i+1][1]];
-              }
-              i += 2;
-              if(i >= lexed.length-1){
-                break total_loop;
-              }
-              continue;
-            }
-            break;
-          case "/":
-            if(lexed[i+1][1] == "["){
-              finalArgs[finalArgs.length-1] /= args[arg][lexed[i+2][1]]
-              if(!command){
-                //console.log("plus")
-                args[args.length-1][args[args.length-1].length-1] /= args[arg][lexed[i+2][1]];
-              }
-              //console.log("plus")
-              i += 3
-            } else if (lexed[i+1][0] == "num"){
-              finalArgs[finalArgs.length-1] = parseInt(finalArgs[finalArgs.length-1]) / parseInt(lexed[i+1][1]);
-              if(!command){
-                args[args.length-1][args[args.length-1].length-1] /= variables[lexed[i+1][1]];
-              }
-              i += 1;
-            } else if (Object.keys(variables).includes(lexed[i+1][1])){
-              finalArgs[finalArgs.length-1] /= parseInt(variables[lexed[i+1][1]]);
-              if(!command){
-                args[args.length-1][args[args.length-1].length-1] /= variables[lexed[i+1][1]];
-              }
-              i += 2;
-              if(i >= lexed.length-1){
-                break total_loop;
-              }
-              continue;
-            }
-            break;      
-        }
       case "none":
       if(lexed[i][0] === "none"){
           if(numbers.includes(lexed[i][1][0])){
